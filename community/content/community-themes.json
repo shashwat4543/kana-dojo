@@ -557,5 +557,11 @@
     "backgroundColor": "oklch(21.0% 0.045 235.0 / 1)",
     "mainColor": "oklch(88.0% 0.055 245.0 / 1)",
     "secondaryColor": "oklch(68.0% 0.165 215.0 / 1)"
+  },
+  {
+    "id": "sunrise-express",
+    "backgroundColor": "oklch(21.0% 0.048 50.0 / 1)",
+    "mainColor": "oklch(90.0% 0.145 70.0 / 1)",
+    "secondaryColor": "oklch(78.0% 0.175 40.0 / 1)"
   }
 ]
