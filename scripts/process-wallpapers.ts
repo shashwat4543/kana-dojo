@@ -2,8 +2,12 @@
  * Wallpaper Image Processing Script
  *
  * Reads source images from data/wallpapers-source/ and generates:
- * 1. Optimized AVIF + WebP versions at multiple sizes in public/wallpapers/
+ * 1. Optimized AVIF + WebP versions at multiple sizes in .generated/wallpapers/
  * 2. A TypeScript manifest file that the app imports to know which wallpapers exist
+ *
+ * Generated images are staged locally, then uploaded to Cloudflare R2 via
+ * `npm run images:upload:r2`. The app manifest points at the R2 custom domain,
+ * not the local staging directory.
  *
  * Premium themes are dynamically generated from whatever images exist in the
  * source folder — no hardcoded wallpaper list needed.
@@ -20,7 +24,13 @@
  * consistency with the browser-side image processor.
  */
 import sharp from 'sharp';
-import { readdir, mkdir, stat, writeFile, unlink } from 'node:fs/promises';
+import {
+  readdir,
+  mkdir,
+  stat,
+  writeFile,
+  unlink,
+} from 'node:fs/promises';
 import { join, parse, extname } from 'node:path';
 import {
   OUTPUT_WIDTHS,
@@ -33,9 +43,15 @@ import {
 
 // Configuration
 const SOURCE_DIR = 'data/wallpapers-source';
-const OUTPUT_DIR = 'public/wallpapers';
+const OUTPUT_DIR = '.generated/wallpapers';
 const MANIFEST_PATH =
   'features/Preferences/data/wallpapers/wallpapers.generated.ts';
+const R2_ASSET_BASE_URL = (
+  process.env.WALLPAPER_ASSET_BASE_URL || 'https://assets.kanadojo.com'
+).replace(/\/$/, '');
+const R2_WALLPAPER_PREFIX = (
+  process.env.WALLPAPER_R2_PREFIX || 'wallpapers'
+).replace(/^\/|\/$/g, '');
 
 const forceReprocess = process.argv.includes('--force');
 
@@ -263,8 +279,8 @@ function generateManifest(
       return `  {
     id: '${r.baseName}',
     name: '${r.displayName}',
-    url: '/wallpapers/${r.baseName}-${selectedWidth}w.avif',
-    urlWebp: '/wallpapers/${r.baseName}-${selectedWidth}w.webp',
+    url: '${R2_ASSET_BASE_URL}/${R2_WALLPAPER_PREFIX}/${r.baseName}-${selectedWidth}w.avif',
+    urlWebp: '${R2_ASSET_BASE_URL}/${R2_WALLPAPER_PREFIX}/${r.baseName}-${selectedWidth}w.webp',
   },`;
     })
     .join('\n');
@@ -276,7 +292,8 @@ function generateManifest(
  * Source: data/wallpapers-source/
  *
  * Each entry corresponds to a source image that was processed into
- * AVIF + WebP at 1920w, 2560w, and 3840w sizes in public/wallpapers/.
+ * AVIF + WebP at 1920w, 2560w, and 3840w sizes in .generated/wallpapers/
+ * and published to Cloudflare R2.
  * 
  * The 2560w size is served by default for optimal quality on modern displays.
  */
@@ -303,7 +320,7 @@ ${entries}
 }
 
 /**
- * Remove output files from public/wallpapers/ that no longer have a
+ * Remove output files from .generated/wallpapers/ that no longer have a
  * corresponding source image (e.g., the source was deleted).
  */
 async function cleanOrphanedOutputs(
@@ -399,7 +416,6 @@ async function main() {
     results.push(result);
 
     if (result.error) {
-      console.error(`    ❌ Error: ${result.error}`);
       errors++;
     } else {
       totalOriginalSize += result.originalSize;
@@ -425,6 +441,8 @@ async function main() {
 
   // Sort results by baseName for deterministic manifest output
   results.sort((a, b) => a.baseName.localeCompare(b.baseName));
+
+  errors = results.filter(r => r.error).length;
 
   const availableWidths = await getAvailableWidthsByBaseName();
 

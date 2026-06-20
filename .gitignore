@@ -29,10 +29,12 @@
 
 # Generated build-time data
 /shared/data/commitInfo.json
+/.generated/
 
 # AI tooling state
 /.agent/
 /.agents/
+/.wrangler/
 /.claude/
 /.claudeignore
 /.gemini/
@@ -60,7 +62,7 @@ zizmor-report.json
 *.tsbuildinfo
 next-env.d.ts
 
-# Wallpaper source images (only processed versions in public/wallpapers/ are tracked)
+# Wallpaper source images are processed into ignored .generated/wallpapers/
 
 
 
