@@ -334,5 +334,11 @@
   "backgroundColor": "oklch(17.0% 0.055 290.0 / 1)",
   "mainColor": "oklch(82.0% 0.195 310.0 / 1)",
   "secondaryColor": "oklch(74.0% 0.140 20.0 / 1)"
-  }
+  },
+  {
+  "id": "plaza-snow",
+  "backgroundColor": "oklch(97.0% 0.006 240.0 / 1)",
+  "mainColor": "oklch(40.0% 0.035 260.0 / 1)",
+  "secondaryColor": "oklch(65.0% 0.120 220.0 / 1)"
+},
 ]
