@@ -614,5 +614,33 @@
     "english": "I will transcend humanity! (alt wording 14)",
     "anime": "JoJo's Bizarre Adventure: Battle Tendency",
     "character": "Kars"
-  }
+  },
+  {
+  "japanese": "世界は残酷だ…それでも美しい",
+  "romaji": "Sekai wa zankoku da... soredemo utsukushii",
+  "english": "This world is cruel... yet so beautiful. (alt wording 26) (alt wording 78)",
+  "anime": "Attack on Titan",
+  "character": "Mikasa Ackerman"
+},
+{
+  "japanese": "ブチャラティ、来た！",
+  "romaji": "Bucharati, kita!",
+  "english": "Bucciarati is here!",
+  "anime": "JoJo's Bizarre Adventure: Golden Wind",
+  "character": "Narancia Ghirga"
+},
+{
+  "japanese": "貴様ッ！見ているなッ！！",
+  "romaji": "Kisama! Mite iru na!!",
+  "english": "You! You're watching me!",
+  "anime": "JoJo's Bizarre Adventure: Stone Ocean",
+  "character": "Jolyne Cujoh"
+},
+  {
+  "japanese": "お前はもう死んでいる",
+  "romaji": "Omae wa mou shindeiru",
+  "english": "You are already dead",
+  "anime": "Fist of the North Star",
+  "character": "Kenshiro"
+}
 ]
